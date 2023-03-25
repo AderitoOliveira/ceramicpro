@@ -1,11 +1,10 @@
 package mobileum.serviceframework.serviceframework.controller;
 
 
-import mobileum.serviceframework.serviceframework.types.FieldType;
-import mobileum.serviceframework.serviceframework.types.FieldTypeJsonWrapper;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RestServiceController {
@@ -18,25 +17,6 @@ public class RestServiceController {
     @GetMapping("/example")
     public String returnTestMessage() {
         return "TEST MESSAGE!!!!!!";
-    }
-
-    @PostMapping("/createfile")
-    public boolean createFile(@RequestBody FieldTypeJsonWrapper fields) {
-
-        List<FieldType> fieldsToCreate = fields.getFields();
-
-        for(FieldType fieldType : fieldsToCreate) {
-            System.out.println(fieldType.getFieldType());
-            System.out.println(fieldType.isRandom());
-        }
-        /*
-        for(FieldTypeJson filedType : filedTypeList) {
-            System.out.println(filedTypeList.getFieldType());
-            System.out.println(filedTypeList.isRandom());
-        }
-        */
-
-        return true;
     }
 
 }
