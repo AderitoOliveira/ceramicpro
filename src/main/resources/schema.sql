@@ -1,0 +1,42 @@
+CREATE TABLE  client  (
+   seq_id  bigint(20) NOT NULL AUTO_INCREMENT,
+   client_id  int(11) NOT NULL,
+   client_name  varchar(255) NOT NULL,
+   coin  varchar(255) DEFAULT NULL,
+   country  varchar(255) DEFAULT NULL,
+   country_code  varchar(255) NOT NULL,
+   first_address  varchar(255) NOT NULL,
+   image_name  varchar(255) NOT NULL,
+   image_path  varchar(255) NOT NULL,
+   location  varchar(255) DEFAULT NULL,
+   nif  varchar(255) DEFAULT NULL,
+   person_to_contact  varchar(255) NOT NULL,
+   phone_number  varchar(255) NOT NULL,
+   postal_code  varchar(255) NOT NULL,
+   created_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   modified_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ( seq_id )
+);
+
+CREATE TABLE  products  (
+   seq_id  bigint(20) NOT NULL AUTO_INCREMENT,
+   article_zpl_string  varchar(255) DEFAULT NULL,
+   bar_code_number  bigint(20) DEFAULT '0',
+   box_zpl_string  varchar(255) DEFAULT NULL,
+   client_name  varchar(255) DEFAULT NULL,
+   customer_product_id  varchar(255) NOT NULL,
+   family  int(11) DEFAULT '0',
+   image_name  varchar(255) DEFAULT NULL,
+   image_path  varchar(255) DEFAULT NULL,
+   internal_product_id  varchar(255) NOT NULL,
+   is_parent  tinyint(1) DEFAULT '0',
+   num_articles_in_box  int(11) DEFAULT '0',
+   parent_customer_product_id  varchar(255) DEFAULT NULL,
+   price_euro_1  decimal(7,2) DEFAULT '0.00',
+   price_euro_2  decimal(7,2) DEFAULT '0.00',
+   product_name  varchar(255) NOT NULL,
+   product_name_for_label  varchar(255) DEFAULT NULL,
+   created_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   modified_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ( customer_product_id )
+);
