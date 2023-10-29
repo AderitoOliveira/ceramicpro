@@ -1,46 +1,68 @@
 package nuvemdesoftware.ceramicpro.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nuvemdesoftware.ceramicpro.filter.JWTTokenGeneratorFilter;
 import nuvemdesoftware.ceramicpro.filter.JWTTokenValidatorFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Configuration
-@EnableWebSecurity // (1)
-public class CeramicProSecurityConfig extends WebSecurityConfigurerAdapter { // (1)
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+public class CeramicProSecurityConfig { // (1)
 
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+    @Value("${spring.security.debug:false}")
+    boolean securityDebug;
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .build();
+    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/vertretungsplan").hasAnyRole("SCHUELER", "LEHRER", "VERWALTUNG")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .permitAll());
+
+        return http.build();
     }
 
+    /*@Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.debug(securityDebug)
+                .ignoring()
+                .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
+    }*/
+
+    /*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -68,14 +90,16 @@ public class CeramicProSecurityConfig extends WebSecurityConfigurerAdapter { // 
                 .antMatchers("/user").authenticated()
                 .antMatchers("/notices").permitAll()
                 .antMatchers("/contact").permitAll().and().httpBasic();*/
-                .antMatchers("/images/*").permitAll()
-                .antMatchers("/**", "/rest/**", "/home", "/images/**")
-                .authenticated() // ENABLE THIS OPTION TO PREVENT CALLING REST API WITHOUT BEING AUTHENTICATED
+               // .antMatchers("/images/*").permitAll()
+               // .antMatchers("/**", "/rest/**", "/home", "/images/**")
+               // .authenticated() // ENABLE THIS OPTION TO PREVENT CALLING REST API WITHOUT BEING AUTHENTICATED
                 //.antMatchers("/images/*").permitAll()
                 //.permitAll()
-                .and()
-                .httpBasic();
-    }
+               // .and()
+                //.httpBasic();
+    //}
+    //*/
+
     /*@Override
     protected void configure(HttpSecurity http) throws Exception {  // (2)
         http

@@ -24,7 +24,7 @@ public class FileUploaderController {
 
     @Autowired
     private FileUtil fileUtil;
-
+    @Autowired
     private final ProductsRepository productsRepository;
 
     @Autowired

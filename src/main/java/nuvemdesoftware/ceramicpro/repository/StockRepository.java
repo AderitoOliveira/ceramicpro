@@ -12,7 +12,7 @@ public interface StockRepository extends PagingAndSortingRepository<Stock, Long>
 
     Page<Stock> findByProductId(String productId, Pageable pageable);
 
-    @Query("select prod from Stock prod where product_id like CONCAT(:searchValue,'%') or product_name like CONCAT(:searchValue,'%')")
+    @Query("select prod from Stock prod where productId like CONCAT(:searchValue,'%') or productName like CONCAT(:searchValue,'%')")
     Page<Stock> findByProdIdProdName(String searchValue, Pageable pageable);
 
     Stock findByProductId(String productId);
