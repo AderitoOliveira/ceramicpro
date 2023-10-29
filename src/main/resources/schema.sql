@@ -19,7 +19,7 @@ CREATE TABLE  client  (
 );
 
 CREATE TABLE  products  (
-   seq_id  bigint(20) NOT NULL AUTO_INCREMENT,
+   seq_id bigint(20) NOT NULL AUTO_INCREMENT,
    article_zpl_string  varchar(255) DEFAULT NULL,
    bar_code_number  bigint(20) DEFAULT '0',
    box_zpl_string  varchar(255) DEFAULT NULL,
@@ -38,5 +38,5 @@ CREATE TABLE  products  (
    product_name_for_label  varchar(255) DEFAULT NULL,
    created_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    modified_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY ( customer_product_id )
+  PRIMARY KEY (seq_id, customer_product_id )
 );
