@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -31,10 +32,11 @@ public class CeramicProAuthenticationProvider implements AuthenticationProvider 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String pwd = authentication.getCredentials().toString();
-        List<User> user = usersRepository.findByUsername(username);
-        if (user.size() > 0) {
-            if (passwordEncoder.matches(pwd, user.get(0).getPassword())) {
-                return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(user.get(0).getAuthorities()));
+        Optional<User> user = usersRepository.findByEmail(username);
+        if (!user.isEmpty()) {
+            if (passwordEncoder.matches(pwd, user.get().getPassword())) {
+                return null;
+                //return new UsernamePasswordAuthenticationToken(username, pwd, getGrantedAuthorities(user.get(0).getAuthorities()));
             } else {
                 throw new BadCredentialsException("Invalid password!");
             }

@@ -9,11 +9,11 @@ public class FileNameUtil {
         String fileName = null;
 
         if (user == null) throw new IllegalArgumentException("User cannot be null!");
-        if (StringUtils.isEmpty(user.getUserId())) throw new IllegalArgumentException("User ID cannot be null!");
+        if (StringUtils.isEmpty(user.getUsername())) throw new IllegalArgumentException("User ID cannot be null!");
 
         Long currentTime = System.currentTimeMillis();
 
-        StringBuilder builder = new StringBuilder("" + user.getUserId());
+        StringBuilder builder = new StringBuilder("" + user.getUsername());
         builder.append("-");
         builder.append(currentTime.toString());
 

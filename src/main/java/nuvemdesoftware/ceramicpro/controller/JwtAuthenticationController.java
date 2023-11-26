@@ -3,6 +3,7 @@ package nuvemdesoftware.ceramicpro.controller;
 import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import nuvemdesoftware.ceramicpro.model.User;
 import nuvemdesoftware.ceramicpro.repository.UsersRepository;
@@ -27,7 +28,6 @@ public class JwtAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserDetailsService jwtInMemoryUserDetailsService;
 
     @Autowired
@@ -52,9 +52,9 @@ public class JwtAuthenticationController {
 
     @RequestMapping("/authenticate")
     public User getUserDetailsAfterLogin(Principal user) {
-        List<User> users = usersRepository.findByUsername(user.getName());
-        if (users.size() > 0) {
-            return users.get(0);
+        Optional<User> users = usersRepository.findByEmail(user.getName());
+        if (!users.isEmpty()) {
+            return users.get();
         }else {
             return null;
         }
