@@ -125,13 +125,13 @@ public class FileUtil {
 
     public String getRootLocationForUserUpload(User user) {
         if (user == null) throw new IllegalArgumentException("No user provided!");
-        if (StringUtils.isEmpty(user.getUserId())) throw new IllegalArgumentException("No user id!");
+        if (StringUtils.isEmpty(user.getUsername())) throw new IllegalArgumentException("No user id!");
 
         StringBuilder builder = new StringBuilder();
 
         builder.append(productsFilesBasePath);
         builder.append("/");
-        builder.append(user.getUserId());
+        builder.append(user.getUsername());
 
         String location = builder.toString();
 
@@ -143,7 +143,7 @@ public class FileUtil {
 
     public String getRootLocationForUserProfileImageUpload(User user) {
         if (user == null) throw new IllegalArgumentException("No user provided!");
-        if (StringUtils.isEmpty(user.getUserId())) throw new IllegalArgumentException("No user id!");
+        if (StringUtils.isEmpty(user.getUsername())) throw new IllegalArgumentException("No user id!");
 
         String base = getRootLocationForUserUpload(user);
 
