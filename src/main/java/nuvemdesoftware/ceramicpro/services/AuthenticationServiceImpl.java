@@ -11,18 +11,21 @@ import org.springframework.stereotype.Service;
 import nuvemdesoftware.ceramicpro.security.dao.JwtAuthenticationResponse;
 import nuvemdesoftware.ceramicpro.security.dao.SignUpRequest;
 import nuvemdesoftware.ceramicpro.security.dao.SigninRequest;
-import nuvemdesoftware.ceramicpro.services.AuthenticationService;
-
-
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    public AuthenticationServiceImpl(UsersRepository usersRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.usersRepository = usersRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
+
     @Override
     public JwtAuthenticationResponse signup(SignUpRequest request) {
         User user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
@@ -35,6 +38,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public JwtAuthenticationResponse signin(SigninRequest request) {
+
+        UsernamePasswordAuthenticationToken token =  new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+//
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = usersRepository.findByEmail(request.getEmail())
