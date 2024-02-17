@@ -20,6 +20,7 @@ import java.net.UnknownHostException;
 @ResponseBody
 @RestController
 @CrossOrigin
+@RequestMapping("/api/products")
 public class ProductController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProductController.class);
@@ -40,7 +41,7 @@ public class ProductController {
     //    this._productsRepository =productsRepository;
     //}
 
-    @GetMapping(path="/getAllProducts")
+    @GetMapping(path="/v1/getAllProducts")
     public CustomPageImpl getAllProducts(@RequestParam(name = "page", defaultValue = "0") int page,
                                          @RequestParam(name = "size", defaultValue = "10") int size,
                                          @RequestParam(name = "search", defaultValue = "") String search) throws UnknownHostException {
@@ -52,7 +53,7 @@ public class ProductController {
 
     }
 
-    @GetMapping(path="/getProduct")
+    @GetMapping(path="/v1/getProduct")
     public Product getProduct(@RequestParam(name = "customerProductId", defaultValue = "0") String customerProductId) throws UnknownHostException {
 
         try {
@@ -64,7 +65,7 @@ public class ProductController {
     }
 
     //@ExceptionHandler
-    @PostMapping(path="/saveProduct")
+    @PostMapping(path="/v1/saveProduct")
     public ResponseEntity saveProduct(@RequestBody Product product) throws ProductServiceException {
 
         ResponseEntity responseEntity = null;
