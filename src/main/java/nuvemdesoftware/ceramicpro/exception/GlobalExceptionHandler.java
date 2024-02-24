@@ -19,7 +19,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AlreadyExistsException.class)
-    protected ResponseEntity<Object> handleNotFound(AlreadyExistsException ex, WebRequest request){
+    protected ResponseEntity<Object> handleAlreadyExists(AlreadyExistsException ex, WebRequest request){
 
         String bodyOfResponse = ex.getLocalizedMessage();
         return handleExceptionInternal(ex, bodyOfResponse,
@@ -32,5 +32,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String bodyOfResponse = ex.getLocalizedMessage();
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    protected ResponseEntity<Object> handleTokenRefreshException(TokenRefreshException ex, WebRequest request){
+
+        String bodyOfResponse = ex.getLocalizedMessage();
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 }
