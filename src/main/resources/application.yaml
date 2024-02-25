@@ -2,3 +2,5 @@ token:
   signing:
     key: 413F4428472B4B6250655368566D5970337336763979244226452948404D6351
   cookieExpiryTime: 1800 # set cookie expiry for 30 minutes
+  jwtServiceTokenExpiryTime: 1800000 # set jwtService Token expiry for 30 minutes
+  refreshTokenServiceTokenExpiryTime: 3600000 # set jwtService Token expiry for 60 minutes
