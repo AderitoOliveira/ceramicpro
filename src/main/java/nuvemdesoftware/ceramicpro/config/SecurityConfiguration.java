@@ -37,12 +37,15 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/**")
-                        .permitAll().anyRequest().authenticated())
-                // This comment should be removed so it blocks unauthenticated requests
-                // when it set on production
-                //.authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
-                //.permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request
+                        // Allow authentication and swagger
+                        .requestMatchers("/api/v1/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html")
+                        .permitAll()
+                        // All other requests need to be authenticated
+                        .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
