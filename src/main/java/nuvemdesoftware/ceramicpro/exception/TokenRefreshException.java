@@ -1,10 +1,10 @@
 package nuvemdesoftware.ceramicpro.exception;
 
-public class AlreadyExistsException extends RuntimeException{
+public class TokenRefreshException extends RuntimeException{
 
-    private static final long serialVersionUID = 142339988967445L;
+    private static final long serialVersionUID = 142339983445435L;
 
-    public AlreadyExistsException(String s) {
+    public TokenRefreshException(String s) {
         super(s);
     }
 }
