@@ -5,6 +5,7 @@ import nuvemdesoftware.ceramicpro.model.User;
 import nuvemdesoftware.ceramicpro.repository.RefreshTokenRepository;
 import nuvemdesoftware.ceramicpro.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,41 +21,42 @@ import java.util.UUID;
 @Service
 public class RefreshTokenService {
 
+    @Value("${token.refreshTokenServiceTokenExpiryTime}")
+    private int refreshTokenServiceTokenExpiryTime;
     @Autowired
     RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private final UsersRepository usersRepository;
 
-    public RefreshTokenService(UsersRepository usersRepository) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UsersRepository usersRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
         this.usersRepository = usersRepository;
     }
 
-    public RefreshToken createRefreshToken(String email){
+    public RefreshToken createRefreshToken(String email) {
 
         Optional<User> user = usersRepository.findByEmail(email);
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(user.get())
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000))
+                .expiryDate(Instant.now().plusMillis(refreshTokenServiceTokenExpiryTime))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
 
 
-
-    public Optional<RefreshToken> findByToken(String token){
+    public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
 
-    public RefreshToken verifyExpiration(RefreshToken token){
-        if(token.getExpiryDate().compareTo(Instant.now())<0){
+    public RefreshToken verifyExpiration(RefreshToken token) {
+        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
             throw new RuntimeException(token.getToken() + " Refresh token is expired. Please make a new login..!");
         }
         return token;
 
     }
-
 }
