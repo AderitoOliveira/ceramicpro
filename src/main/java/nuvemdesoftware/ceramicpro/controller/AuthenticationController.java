@@ -1,5 +1,7 @@
 package nuvemdesoftware.ceramicpro.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import nuvemdesoftware.ceramicpro.dto.RefreshTokenRequestDTO;
 import nuvemdesoftware.ceramicpro.security.dao.JwtAuthenticationResponse;
 import nuvemdesoftware.ceramicpro.security.dao.SignUpRequest;
 import nuvemdesoftware.ceramicpro.security.dao.SigninRequest;
@@ -26,7 +28,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
-        return ResponseEntity.ok(authenticationService.signin(request));
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request,  HttpServletResponse response) {
+        return ResponseEntity.ok(authenticationService.signin(request, response));
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<JwtAuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequestDTO request, HttpServletResponse response) {
+        return ResponseEntity.ok(authenticationService.refreshToken(request, response));
     }
 }
