@@ -36,4 +36,9 @@ public class AuthenticationController {
     public ResponseEntity<JwtAuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequestDTO request, HttpServletResponse response) {
         return ResponseEntity.ok(authenticationService.refreshToken(request, response));
     }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody RefreshTokenRequestDTO request, HttpServletResponse response) {
+        authenticationService.logout(request, response);
+    }
 }

@@ -3,6 +3,7 @@ package nuvemdesoftware.ceramicpro.services;
 
 import jakarta.servlet.http.HttpServletResponse;
 import nuvemdesoftware.ceramicpro.dto.RefreshTokenRequestDTO;
+import nuvemdesoftware.ceramicpro.exception.NotFoundException;
 import nuvemdesoftware.ceramicpro.exception.TokenRefreshException;
 import nuvemdesoftware.ceramicpro.model.RefreshToken;
 import nuvemdesoftware.ceramicpro.repository.UsersRepository;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 import nuvemdesoftware.ceramicpro.security.dao.JwtAuthenticationResponse;
 import nuvemdesoftware.ceramicpro.security.dao.SignUpRequest;
 import nuvemdesoftware.ceramicpro.security.dao.SigninRequest;
+
+import java.util.Optional;
 
 
 @Service
@@ -92,6 +95,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     return JwtAuthenticationResponse.builder()
                             .accessToken(accessToken)
                             .token(refreshTokenRequestDTO.getToken()).build();
-                }).orElseThrow(() ->new TokenRefreshException("Refresh token was expired. Please make a new signin request"));
+                }).orElseThrow(() -> new TokenRefreshException("Refresh token was expired. Please make a new signin request"));
+    }
+
+    @Override
+    public void logout(RefreshTokenRequestDTO request, HttpServletResponse response) {
+        try {
+            Optional<RefreshToken> token = refreshTokenService.findByToken(request.getToken());
+            if(token.isPresent()) {
+                refreshTokenService.deleteRefreshToken(token.get());
+            }
+        } catch (Exception e) {
+            throw new NotFoundException(e.getLocalizedMessage());
+        }
     }
 }
